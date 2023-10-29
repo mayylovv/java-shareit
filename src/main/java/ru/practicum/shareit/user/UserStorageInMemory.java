@@ -2,6 +2,7 @@ package ru.practicum.shareit.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.model.User;
@@ -16,12 +17,12 @@ import java.util.Optional;
 public class UserStorageInMemory implements UserStorage {
 
     private static long id = 0L;
-    HashMap<Long, User> users = new HashMap<>();
+    public final HashMap<Long, User> users = new HashMap<>();
 
     @Override
     public User create(User user) {
         if (users.values().stream().noneMatch(u -> Objects.equals(user.getEmail(), u.getEmail()))) {
-            long userId = id++;
+            long userId = ++id;
             user.setId(userId);
             users.put(userId, user);
             return user;
@@ -33,7 +34,7 @@ public class UserStorageInMemory implements UserStorage {
     @Override
     public User update(User user, Long userId) {
         if (!users.containsKey(userId)) {
-            throw new NotFoundException("Пользователь с таким id не найден");
+            throw new ValidationException("Пользователь с таким id не найден");
         }
         if (users.values().stream()
                 .filter(u -> !Objects.equals(u.getId(), userId))
@@ -55,7 +56,7 @@ public class UserStorageInMemory implements UserStorage {
     @Override
     public void deleteByID(Long userId) {
         if (!users.containsKey(userId)) {
-            throw new NotFoundException("Пользователь с таким id не найден");
+            throw new BadRequestException("Пользователь с таким id не найден");
         }
         users.remove(userId);
     }

@@ -2,6 +2,7 @@ package ru.practicum.shareit.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -19,10 +20,10 @@ public class UserService {
 
     public UserDto create(UserDto userDto) {
         if (userDto.getName() == null) {
-            throw new NotFoundException("Поле name равно null");
+            throw new BadRequestException("Поле name равно null");
         }
         if (userDto.getEmail() == null) {
-            throw new NotFoundException("Поле email равно null");
+            throw new BadRequestException("Поле email равно null");
         }
         return UserMapper.toUserDto(userStorageInMemory.create(UserMapper.toUser(userDto)));
     }
