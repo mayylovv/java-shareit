@@ -1,24 +1,22 @@
 package ru.practicum.shareit.item;
 
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 public class ItemStorageInMemory implements ItemStorage {
 
-    private static long id = 0L;
-    HashMap<Long, Item> items = new HashMap<>();
+    private long id = 0L;
+    private final Map<Long, Item> items = new HashMap<>();
 
     @Override
     public Item add(Item item) {
-        long itemId = ++id;
+        Long itemId = ++id;
         item.setId(itemId);
         items.put(itemId, item);
         return item;
@@ -27,7 +25,7 @@ public class ItemStorageInMemory implements ItemStorage {
     @Override
     public Item update(Long itemId, Long userId, Item item) {
         if (!items.containsKey(itemId)) {
-            throw new NotFoundException("Позиция с таким id не найдена");
+            throw new BadRequestException("Позиция с таким id не найдена");
         }
         Item existingItem = items.get(itemId);
         if (!Objects.equals(existingItem.getOwner().getId(), userId)) {

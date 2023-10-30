@@ -2,11 +2,15 @@ package ru.practicum.shareit.item;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exception.BadRequestException;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.Collection;
+import java.util.Map;
 
 @Slf4j
 @Validated
@@ -23,7 +27,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDto addItem(@RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") Long userId) {
-        return itemService.add(itemDto, userId);
+        return itemService.addItem(itemDto, userId);
     }
 
     @PatchMapping("/{itemId}")
@@ -33,7 +37,7 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto getItemById(@PathVariable Long itemId) {
+    public ItemDto getItemByItemId(@PathVariable Long itemId) {
         return itemService.getItemById(itemId);
     }
 
@@ -43,8 +47,19 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public Collection<ItemDto> getItemsByKeyword(@RequestParam String keyword) {
-        return itemService.getItemsByKeyword(keyword);
+    public Collection<ItemDto> getItemsByKeyword(@RequestParam String text) {
+        return itemService.getItemsByKeyword(text);
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handle(final NotFoundException e) {
+        return Map.of("error_message", e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handle(final BadRequestException e) {
+        return Map.of("error_message", e.getMessage());
     }
 }
-
