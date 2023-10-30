@@ -23,7 +23,7 @@ public class ItemService {
     public ItemDto addItem(ItemDto itemDto, Long userId) {
         Optional<User> user = userStorage.findById(userId);
         if (user.isEmpty()) {
-            throw new NotFoundException("Пользователь с таким id не найден");
+            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
         }
         if ((itemDto.getName() == null || itemDto.getDescription() == null || itemDto.getAvailable() == null) ||
                 (itemDto.getName().isBlank() || itemDto.getDescription().isBlank())) {
@@ -35,7 +35,7 @@ public class ItemService {
     public ItemDto update(Long itemId, Long userId, ItemDto itemDto) {
         Optional<User> existingUser = userStorage.findById(userId);
         if (existingUser.isEmpty()) {
-            throw new NotFoundException("Пользователь с таким id не найден");
+            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
         }
         Item item = ItemMapper.toItem(itemDto, existingUser.get(), null);
         return ItemMapper.toItemDto(itemStorage.update(itemId, userId, item));

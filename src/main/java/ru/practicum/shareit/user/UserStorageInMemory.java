@@ -26,19 +26,19 @@ public class UserStorageInMemory implements UserStorage {
             users.put(userId, user);
             return user;
         } else {
-            throw new ValidationException("Пользователь с таким email не найден");
+            throw new ValidationException("Пользователь с email = " + user.getEmail() + " не найден");
         }
     }
 
     @Override
     public User update(User user, Long userId) {
         if (!users.containsKey(userId)) {
-            throw new ValidationException("Пользователь с таким id не найден");
+            throw new ValidationException("Пользователь с id = " + userId + " не найден");
         }
         if (users.values().stream()
                 .filter(u -> !Objects.equals(u.getId(), userId))
                 .anyMatch(u -> Objects.equals(user.getEmail(), u.getEmail()))) {
-            throw new ValidationException("Пользователь с таким email не найден");
+            throw new ValidationException("Пользователь с email = " + user.getEmail() + " не найден");
         }
         User existingUser = users.get(userId);
         user.setId(userId);
@@ -55,7 +55,7 @@ public class UserStorageInMemory implements UserStorage {
     @Override
     public void deleteByID(Long userId) {
         if (!users.containsKey(userId)) {
-            throw new BadRequestException("Пользователь с таким id не найден");
+            throw new BadRequestException("Пользователь с id = " + userId + " не найден");
         }
         users.remove(userId);
     }

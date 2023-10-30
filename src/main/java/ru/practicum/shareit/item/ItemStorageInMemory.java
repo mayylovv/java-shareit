@@ -25,7 +25,7 @@ public class ItemStorageInMemory implements ItemStorage {
     @Override
     public Item update(Long itemId, Long userId, Item item) {
         if (!items.containsKey(itemId)) {
-            throw new BadRequestException("Позиция с таким id не найдена");
+            throw new BadRequestException("Позиция с id = " + itemId + " не найдена");
         }
         Item existingItem = items.get(itemId);
         if (!Objects.equals(existingItem.getOwner().getId(), userId)) {

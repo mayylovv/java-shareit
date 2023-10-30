@@ -38,7 +38,7 @@ public class UserService {
 
     public UserDto findById(Long userId) {
         return UserMapper.toUserDto(userStorageInMemory.findById(userId)
-                .orElseThrow(() -> new NotFoundException("Пользователь с таким id не найден")));
+                .orElseThrow(() -> new NotFoundException("Пользователь с id = " + userId + " не найден")));
     }
 
     public Collection<UserDto> findAll() {
