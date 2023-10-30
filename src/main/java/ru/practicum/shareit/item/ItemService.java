@@ -1,10 +1,9 @@
 package ru.practicum.shareit.item;
 
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.BadRequestException;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.UserStorage;
@@ -28,7 +27,7 @@ public class ItemService {
         }
         if ((itemDto.getName() == null || itemDto.getDescription() == null || itemDto.getAvailable() == null) ||
                 (itemDto.getName().isBlank() || itemDto.getDescription().isBlank())) {
-            throw new ValidationException("Обязательные поля не заполнены");
+            throw new BadRequestException("Обязательные поля не заполнены");
         }
         return ItemMapper.toItemDto(itemStorage.add(ItemMapper.toItem(itemDto, user.get(), null)));
     }
