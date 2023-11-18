@@ -22,7 +22,7 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    long id;
+    Long id;
 
     @Column(name = "start_date", nullable = false)
     LocalDateTime start = LocalDateTime.now();

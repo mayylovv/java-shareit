@@ -11,9 +11,9 @@ import ru.practicum.shareit.booking.service.BookingService;
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController
-@Slf4j
+
 @Validated
+@RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/bookings")
 public class BookingController {

@@ -1,9 +1,7 @@
 package ru.practicum.shareit.booking;
 
-
 import lombok.Getter;
 import ru.practicum.shareit.error.exceptions.NotProcessStatusException;
-
 
 @Getter
 public enum BookingState {

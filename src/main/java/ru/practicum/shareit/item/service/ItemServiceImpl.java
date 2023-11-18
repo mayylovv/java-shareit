@@ -150,6 +150,9 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId).get();
         LocalDateTime dateTime = LocalDateTime.now();
         Optional<Booking> booking = bookingRepository.findFirstByItemIdAndBookerIdAndStatusAndEndBefore(itemId, userId, Status.APPROVED, dateTime);
+        if (commentDto.getText().isEmpty()){
+            throw new ValidationException("Нельзя опубликовать пустой комментарий");
+        }
         if (booking.isEmpty()) {
             throw new ValidationException("Пользователь с id = " + userId + " не бронировал позицию с id = " + itemId);
         }
