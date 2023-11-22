@@ -151,7 +151,7 @@ public class ItemServiceImpl implements ItemService {
         LocalDateTime dateTime = LocalDateTime.now();
         Optional<Booking> booking = bookingRepository.findFirstByItemIdAndBookerIdAndStatusAndEndBefore(itemId, userId, Status.APPROVED, dateTime);
         if (commentDto.getText().isEmpty()) {
-            throw new ValidationException("Нельзя опубликовать пустой комментарий");
+            throw new ValidationException("Невозможно опубликовать пустой комментарий");
         }
         if (booking.isEmpty()) {
             throw new ValidationException("Пользователь с id = " + userId + " не бронировал позицию с id = " + itemId);
