@@ -6,10 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.shareit.error.exceptions.NotFoundEmailException;
-import ru.practicum.shareit.error.exceptions.NotFoundException;
-import ru.practicum.shareit.error.exceptions.NotProcessStatusException;
-import ru.practicum.shareit.error.exceptions.ValidationException;
+import ru.practicum.shareit.error.exceptions.*;
 
 
 @Slf4j
@@ -43,6 +40,14 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(final NotFoundException e) {
+        return new ErrorResponse(
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleUnauthorizedAccessException(final UnauthorizedAccessException e) {
         return new ErrorResponse(
                 e.getMessage()
         );

@@ -12,6 +12,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.OutputBookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.error.exceptions.NotFoundException;
+import ru.practicum.shareit.error.exceptions.UnauthorizedAccessException;
 import ru.practicum.shareit.error.exceptions.ValidationException;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
@@ -34,19 +35,21 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public OutputBookingDto addBooking(BookingDto bookingDto, long userId) {
-        Item item = itemRepository.findById(bookingDto.getItemId()).orElseThrow(() -> new NotFoundException("Позиция не найдена"));
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        Item item = itemRepository.findById(bookingDto.getItemId())
+                .orElseThrow(() -> new NotFoundException(String.format("Позиция с ID %d не найдена", bookingDto.getItemId())));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(String.format("Пользователь с ID %d не найден", userId)));
         Booking booking = BookingMapper.returnBooking(bookingDto);
         booking.setItem(item);
         booking.setBooker(user);
         if (item.getOwner().equals(user)) {
-            throw new NotFoundException("Владелец " + userId + " не может бронировать свой предмет");
+            throw new NotFoundException(String.format("Владелец с ID %d не может бронировать свой предмет", userId));
         }
         if (!item.getAvailable()) {
-            throw new ValidationException("Позиция " + item.getId() + " уже забронирована");
+            throw new ValidationException(String.format("Позиция с ID %d уже забронирована", item.getId()));
         }
         if (booking.getStart().isAfter(booking.getEnd())) {
-            throw new ValidationException("Начало не может после конца");
+            throw new ValidationException("Начало не может быть после конца");
         }
         if (booking.getStart().isEqual(booking.getEnd())) {
             throw new ValidationException("Начало не может совпадать с концом");
@@ -61,7 +64,7 @@ public class BookingServiceImpl implements BookingService {
         checkBooking(bookingId);
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException("Бронь не найдена"));
         if (booking.getItem().getOwner().getId() != userId) {
-            throw new NotFoundException("Только владелец " + userId + " предмета может изменить статус брони");
+            throw new NotFoundException(String.format("Только владелец с ID %d предмета может изменить статус брони", userId));
         }
         if (approved) {
             if (booking.getStatus().equals(Status.APPROVED)) {
@@ -84,7 +87,7 @@ public class BookingServiceImpl implements BookingService {
         if (booking.getBooker().getId() == userId || booking.getItem().getOwner().getId() == userId) {
             return BookingMapper.toBookingDto(booking);
         } else {
-            throw new NotFoundException("Отказано в доступе");
+            throw new UnauthorizedAccessException("Получить информацию о бронировании может получить только владелец и арендатор");
         }
     }
 
@@ -151,13 +154,13 @@ public class BookingServiceImpl implements BookingService {
 
     private void checkUser(long userId) {
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+            throw new NotFoundException(String.format("Пользователь с ID %d не найден", userId));
         }
     }
 
     private void checkBooking(long bookingId) {
         if (!bookingRepository.existsById(bookingId)) {
-            throw new NotFoundException("Бронь с id " + bookingId + " не найдена");
+            throw new NotFoundException(String.format("Бронь с ID %d не найдена", bookingId));
         }
     }
 }
