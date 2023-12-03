@@ -1,36 +1,30 @@
 package ru.practicum.shareit.user;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.exception.BadRequestException;
-import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import javax.validation.Valid;
-import java.util.Collection;
-import java.util.Map;
+import java.util.List;
 
-@Slf4j
+@Validated
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = "/users")
 public class UserController {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
 
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @PostMapping()
-    public UserDto create(@Valid @RequestBody UserDto userDto) {
+    public UserDto create(@RequestBody @Valid UserDto userDto) {
         return userService.create(userDto);
     }
 
     @PatchMapping("/{userId}")
-    public UserDto update(@PathVariable Long userId, @Valid @RequestBody UserDto userDto) {
+    public UserDto update(@RequestBody UserDto userDto, @PathVariable Long userId) {
         return userService.update(userDto, userId);
     }
 
@@ -45,25 +39,7 @@ public class UserController {
     }
 
     @GetMapping()
-    public Collection<UserDto> findAll() {
+    public List<UserDto> findAll() {
         return userService.findAll();
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handle(final NotFoundException e) {
-        log.error("Обработка исключения NotFoundException", e);
-        return Map.of(
-                "error_message", e.getMessage()
-        );
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handle(final BadRequestException e) {
-        log.error("Обработка исключения BadRequestException", e);
-        return Map.of(
-                "error_message", e.getMessage()
-        );
     }
 }
