@@ -1,6 +1,7 @@
-package ru.practicum.shareit.error.exceptions;
+package ru.practicum.shareit.error.exception;
 
 public class NotFoundEmailException extends RuntimeException {
+
     public NotFoundEmailException(String message) {
         super(message);
     }

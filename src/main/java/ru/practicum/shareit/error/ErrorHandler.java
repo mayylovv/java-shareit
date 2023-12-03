@@ -6,11 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.practicum.shareit.error.exceptions.*;
+import ru.practicum.shareit.error.exception.*;
 
 
-@Slf4j
 @RestControllerAdvice
+@Slf4j
 public class ErrorHandler {
 
     @ExceptionHandler
@@ -52,5 +52,4 @@ public class ErrorHandler {
                 e.getMessage()
         );
     }
-
 }

@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
 
-    long id;
+    Long id;
 
     @NotNull
     @NotBlank

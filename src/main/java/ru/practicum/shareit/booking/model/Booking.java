@@ -10,10 +10,10 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
-@Entity
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Entity
 @Table(name = "bookings")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)

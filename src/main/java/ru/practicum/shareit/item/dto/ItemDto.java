@@ -10,6 +10,7 @@ import ru.practicum.shareit.comment.dto.CommentDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 
@@ -19,7 +20,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ItemDto {
 
-    long id;
+    Long id;
     @NotNull
     @NotBlank
     String name;
@@ -31,4 +32,6 @@ public class ItemDto {
     ShortItemBookingDto lastBooking;
     ShortItemBookingDto nextBooking;
     List<CommentDto> comments;
+    @Positive(message = "must be positive")
+    Long requestId;
 }
