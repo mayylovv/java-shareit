@@ -102,7 +102,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         return PageRequest.of(from / size, size);
     }
 
-    private  void checkRequest(Long requestId) {
+    private void checkRequest(Long requestId) {
         if (!itemRequestRepository.existsById(requestId)) {
             throw new NotFoundException(String.format("Запрос с id = %d не найден", requestId ));
         }

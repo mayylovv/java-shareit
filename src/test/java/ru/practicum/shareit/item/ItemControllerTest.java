@@ -121,7 +121,7 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.available", is(itemDto1.getAvailable()), Boolean.class))
                 .andExpect(jsonPath("$.requestId", is(itemDto1.getRequestId()), Long.class));
 
-        verify(itemService, times(1)).update( 1L, 1L, itemDto1);
+        verify(itemService, times(1)).update(1L, 1L, itemDto1);
     }
 
     @Test
