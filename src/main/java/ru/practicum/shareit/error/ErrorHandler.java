@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import ru.practicum.shareit.error.exception.*;
 
 
-@RestControllerAdvice
 @Slf4j
+@RestControllerAdvice
 public class ErrorHandler {
 
     @ExceptionHandler

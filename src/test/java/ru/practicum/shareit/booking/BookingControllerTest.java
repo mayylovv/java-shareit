@@ -3,6 +3,8 @@ package ru.practicum.shareit.booking;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -10,15 +12,26 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.OutputBookingDto;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.error.exception.NotFoundException;
+import ru.practicum.shareit.item.ItemMapper;
+import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.UserMapper;
+import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.User;
 
+import javax.validation.ConstraintViolationException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -35,6 +48,21 @@ public class BookingControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private BookingController bookingController;
+
+    @Mock
+    private ItemRepository itemRepository;
+
+    @Mock
+    private UserRepository userRepository;
+
+    @Mock
+    private BookingRepository bookingRepository;
+
+//    @InjectMocks
+//    private BookingService bookingService;
 
     private ItemDto itemDto;
 
@@ -147,4 +175,35 @@ public class BookingControllerTest {
 
         verify(bookingService, times(1)).getBookingsForItemsByOwnerId(1L, "ALL", 0, 10);
     }
+
+    @Test
+    void testAddBooking() throws Exception {
+
+        when(bookingService.addBooking(any(BookingDto.class), anyLong())).thenReturn(outputBookingDto1);
+        mvc.perform(post("/bookings")
+                        .content(mapper.writeValueAsString(bookingDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 1L))
+                        .andExpect(status().isBadRequest());
+        assertThrows(ConstraintViolationException.class, () -> bookingController.addBooking(userDto.getId(), bookingDto));
+    }
+
+ //   @Test
+    /*void testAddBooking() throws Exception {
+
+        when(bookingService.addBooking(any(BookingDto.class), anyLong())).thenReturn(outputBookingDto1);
+        mvc.perform(post("/bookings")
+                        .content(mapper.writeValueAsString(bookingDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 1L))
+                        .andExpect(status().isBadRequest());
+    }
+
+     */
+
+
 }

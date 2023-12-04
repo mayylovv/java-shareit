@@ -208,7 +208,7 @@ public class ItemServiceImpl implements ItemService {
 
     private void checkRequest(Long requestId) {
         if (!itemRequestRepository.existsById(requestId)) {
-            throw new NotFoundException("Request id " + requestId + " not found.");
+            throw new NotFoundException("Запрос с id = " + requestId + " не найден.");
         }
     }
 }

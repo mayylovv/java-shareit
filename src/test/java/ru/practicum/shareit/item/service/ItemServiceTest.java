@@ -24,8 +24,10 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.request.ItemRequestRepository;
+import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.UserRepository;
+import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -42,6 +44,9 @@ public class ItemServiceTest {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private UserService userService;
 
     @MockBean
     private ItemRepository itemRepository;
@@ -71,30 +76,36 @@ public class ItemServiceTest {
     void beforeEach() {
         user = User.builder()
                 .id(1L)
-                .name("vasiliy")
-                .email("vasiliy@yandex.ru")
+                .name("andrey")
+                .email("andrey@yandex.ru")
                 .build();
+
         itemRequest = ItemRequest.builder()
                 .id(1L)
                 .description("text request description")
                 .created(LocalDateTime.now())
                 .build();
+
         item = Item.builder()
                 .id(1L)
-                .name("ringOfForce")
-                .description("from movie ringOfForce")
+                .name("hammer")
+                .description("steel hammer")
                 .available(true)
                 .owner(user)
                 .request(itemRequest)
                 .build();
+
         itemDto = ItemMapper.returnItemDto(item);
+
         comment = Comment.builder()
                 .id(1L)
                 .author(user)
                 .created(LocalDateTime.now())
                 .text("text")
                 .build();
+
         commentDto = CommentMapper.returnCommentDto(comment);
+
         booking1 = Booking.builder()
                 .id(1L)
                 .start(LocalDateTime.now())
@@ -103,6 +114,7 @@ public class ItemServiceTest {
                 .booker(user)
                 .status(Status.APPROVED)
                 .build();
+
         booking2 = Booking.builder()
                 .id(2L)
                 .start(LocalDateTime.now())
@@ -224,5 +236,15 @@ public class ItemServiceTest {
         when(bookingRepository.findFirstByItemIdAndBookerIdAndStatusAndEndBefore(anyLong(), anyLong(), any(Status.class), any(LocalDateTime.class))).thenReturn(Optional.empty());
 
         assertThrows(ValidationException.class, () -> itemService.postComment(user.getId(), item.getId(), commentDto));
+    }
+
+    @Test
+    void testAddItem() {
+        when(userRepository.existsById(anyLong())).thenReturn(true);
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(itemRequestRepository.findById(anyLong())).thenReturn(Optional.ofNullable(itemRequest));
+        when(itemRepository.save(any(Item.class))).thenReturn(item);
+
+        assertThrows(NotFoundException.class, () -> itemService.addItem(user.getId(), itemDto));
     }
 }
