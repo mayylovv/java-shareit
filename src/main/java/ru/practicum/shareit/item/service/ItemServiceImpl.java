@@ -171,7 +171,7 @@ public class ItemServiceImpl implements ItemService {
             throw new ValidationException("Невозможно опубликовать пустой комментарий");
         }
         if (booking.isEmpty()) {
-            throw new ValidationException("Пользователь с id = " + userId + " не бронировал позицию с id = " + itemId);
+            throw new ValidationException(String.format("Пользователь с id = %d не бронировал позицию с id = %d.", userId, itemId));
         }
 
         Comment comment = CommentMapper.returnComment(commentDto, item, user, dateTime);

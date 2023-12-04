@@ -94,7 +94,7 @@ public class BookingServiceImpl implements BookingService {
         if (booking.getBooker().getId() == userId || booking.getItem().getOwner().getId() == userId) {
             return BookingMapper.toBookingDto(booking);
         } else {
-            throw new NotFoundException("Получить информацию о бронировании может получить только владелец и арендатор");
+            throw new NotFoundException(String.format("Получить информацию о брони c id = %d может получить только владелец и арендатор c id = %d.", bookingId, userId));
         }
     }
 
@@ -137,7 +137,7 @@ public class BookingServiceImpl implements BookingService {
         checkUser(userId);
         PageRequest pageRequest = checkPageSize(from, size);
         if (itemRepository.findByOwnerId(userId).isEmpty()) {
-            throw new ValidationException("У пользователя нет позиций для брони");
+            throw new ValidationException(String.format("У пользователя c id = %d нет позиций для брони", userId));
         }
         Page<Booking> bookings = null;
         BookingState bookingState = BookingState.getEnumValue(state);
