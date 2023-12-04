@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.OutputBookingDto;
+import ru.practicum.shareit.booking.dto.ShortItemBookingDto;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.item.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -52,9 +54,6 @@ public class BookingControllerTest {
 
     @Mock
     private BookingRepository bookingRepository;
-
-//    @InjectMocks
-//    private BookingService bookingService;
 
     private ItemDto itemDto;
 
@@ -180,5 +179,11 @@ public class BookingControllerTest {
                         .header("X-Sharer-User-Id", 1L))
                 .andExpect(status().isBadRequest());
         assertThrows(ConstraintViolationException.class, () -> bookingController.addBooking(userDto.getId(), bookingDto));
+    }
+
+    @Test
+    public void testToBookingShortDto() {
+        Booking booking = BookingMapper.returnBooking(bookingDto);
+        assertThrows(NullPointerException.class, () -> BookingMapper.toBookingShortDto(booking));
     }
 }
