@@ -3,8 +3,8 @@ package ru.practicum.shareit.user.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.error.exceptions.NotFoundEmailException;
-import ru.practicum.shareit.error.exceptions.NotFoundException;
+import ru.practicum.shareit.error.exception.NotFoundEmailException;
+import ru.practicum.shareit.error.exception.NotFoundException;
 import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -13,8 +13,8 @@ import ru.practicum.shareit.user.model.User;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
 @Transactional(readOnly = true)
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     UserRepository userRepository;
@@ -27,9 +27,10 @@ public class UserServiceImpl implements UserService {
         return UserMapper.returnUserDto(user);
     }
 
+
     @Override
     @Transactional
-    public UserDto update(UserDto userDto, Long userId) {
+    public UserDto update(UserDto userDto, long userId) {
         User exisitingUser = UserMapper.returnUser(userDto);
         exisitingUser.setId(userId);
         checkUser(userId);
@@ -48,16 +49,18 @@ public class UserServiceImpl implements UserService {
         return UserMapper.returnUserDto(user);
     }
 
+
     @Override
     @Transactional
-    public void deleteById(Long userId) {
+    public void deleteById(long userId) {
         checkUser(userId);
         userRepository.deleteById(userId);
     }
 
+
     @Override
     @Transactional(readOnly = true)
-    public UserDto findById(Long userId) {
+    public UserDto findById(long userId) {
         checkUser(userId);
         return UserMapper.returnUserDto(userRepository.findById(userId).get());
     }
@@ -67,9 +70,9 @@ public class UserServiceImpl implements UserService {
         return UserMapper.returnUserDtoList(userRepository.findAll());
     }
 
-    private void checkUser(Long userId) {
+    private void checkUser(long userId) {
         if (!userRepository.existsById(userId)) {
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+            throw new NotFoundException(String.format("Пользователь с ID %d не найден", userId));
         }
     }
 }

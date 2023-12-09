@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Data
@@ -18,15 +17,14 @@ import javax.validation.constraints.NotBlank;
 public class User {
 
     @Id
-    @EqualsAndHashCode.Include
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    @EqualsAndHashCode.Include
+    Long id;
 
     @NotBlank
     @Column(name = "name", nullable = false)
     String name;
 
-    @Email
     @Column(name = "email", unique = true)
     String email;
 }
