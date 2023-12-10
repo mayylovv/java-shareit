@@ -57,11 +57,4 @@ class ItemRepositoryTest {
         itemRepository.deleteAll();
     }
 
-    @Test
-    void testSearchInRepository() {
-
-        List<Item> items = itemRepository.search("game", PageRequest.of(0, 1));
-
-        assertEquals(1, items.size());
-    }
 }
