@@ -13,7 +13,6 @@ class ItemRepositoryTest {
 
     @Autowired
     UserRepository userRepository;
-
     @Autowired
     ItemRepository itemRepository;
 
