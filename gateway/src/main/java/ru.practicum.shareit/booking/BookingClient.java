@@ -23,6 +23,7 @@ public class BookingClient extends BaseClient {
                 .build());
     }
 
+
     public ResponseEntity<Object> addBooking(Long userId, BookingDto requestDto) {
         return post("", userId, requestDto);
     }

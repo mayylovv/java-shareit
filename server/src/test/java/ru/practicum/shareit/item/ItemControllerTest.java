@@ -107,7 +107,7 @@ public class ItemControllerTest {
 
     @Test
     void testUpdateItem() throws Exception {
-        when(itemService.update(anyLong(), anyLong(), any(ItemDto.class))).thenReturn(itemDto1);
+        when(itemService.update(any(ItemDto.class), anyLong(),  anyLong())).thenReturn(itemDto1);
         mvc.perform(patch("/items/{itemId}", 1L)
                 .content(mapper.writeValueAsString(itemDto1))
                 .characterEncoding(StandardCharsets.UTF_8)
@@ -121,7 +121,7 @@ public class ItemControllerTest {
                 .andExpect(jsonPath("$.available", is(itemDto1.getAvailable()), Boolean.class))
                 .andExpect(jsonPath("$.requestId", is(itemDto1.getRequestId()), Long.class));
 
-        verify(itemService, times(1)).update(1L, 1L, itemDto1);
+        verify(itemService, times(1)).update(itemDto1,1L, 1L);
     }
 
     @Test

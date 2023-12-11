@@ -271,7 +271,7 @@ public class BookingServiceTest {
     @Test
     void testGetAllBookingsForAllItemsByOwnerId() {
         when(userRepository.existsById(anyLong())).thenReturn(true);
-        when(itemRepository.findByOwnerId(anyLong())).thenReturn(List.of(item));
+        when(itemRepository.findByOwnerIdOrderById(anyLong())).thenReturn(List.of(item));
         when(bookingRepository.findAllByItemOwnerIdOrderByStartDesc(anyLong(), any(PageRequest.class))).thenReturn(new PageImpl<>(List.of(booking1)));
         String state = "ALL";
         List<OutputBookingDto> bookingOutDtoTest = bookingService.getBookingsForItemsByOwnerId(user1.getId(), state, 5, 10);
@@ -323,7 +323,7 @@ public class BookingServiceTest {
     @Test
     void testGetBookingsForAllItemsByOwnerIdNotHaveItems() {
         when(userRepository.existsById(anyLong())).thenReturn(true);
-        when(itemRepository.findByOwnerId(anyLong())).thenReturn(List.of());
+        when(itemRepository.findByOwnerIdOrderById(anyLong())).thenReturn(List.of());
 
         assertThrows(ValidationException.class, () -> bookingService.getBookingsForItemsByOwnerId(user1.getId(), "APPROVED", 5, 10));
     }
