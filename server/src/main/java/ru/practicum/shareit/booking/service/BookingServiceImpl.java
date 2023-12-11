@@ -93,6 +93,7 @@ public class BookingServiceImpl implements BookingService {
             throw new NotFoundException(String.format("Получить информацию о брони c id = %d может получить только владелец и арендатор c id = %d.", bookingId, userId));
         }
     }
+
     @Override
     @Transactional(readOnly = true)
     public List<OutputBookingDto> getBookingsByBookerId(long userId, String state, Integer from, Integer size) {
@@ -123,6 +124,7 @@ public class BookingServiceImpl implements BookingService {
         }
         return BookingMapper.returnBookingDtoList(bookings);
     }
+
     @Override
     @Transactional(readOnly = true)
     public List<OutputBookingDto> getBookingsForItemsByOwnerId(long userId, String state, Integer from, Integer size) {

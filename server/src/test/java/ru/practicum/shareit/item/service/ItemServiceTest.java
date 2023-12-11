@@ -132,7 +132,7 @@ public class ItemServiceTest {
         when(itemRepository.findByOwnerIdOrderById(anyLong())).thenReturn(List.of(item));
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
         when(itemRepository.save(any(Item.class))).thenReturn(item);
-        ItemDto itemDtoTest = itemService.update( itemDto, user.getId(),  item.getId());
+        ItemDto itemDtoTest = itemService.update(itemDto, user.getId(),  item.getId());
 
         assertEquals(itemDtoTest.getId(), itemDto.getId());
         assertEquals(itemDtoTest.getDescription(), itemDto.getDescription());
@@ -148,7 +148,7 @@ public class ItemServiceTest {
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
         when(itemRepository.findByOwnerIdOrderById(anyLong())).thenReturn(Collections.emptyList());
 
-        assertThrows(NotFoundException.class, () -> itemService.update( itemDto, user.getId(),  item.getId()));
+        assertThrows(NotFoundException.class, () -> itemService.update(itemDto, user.getId(),  item.getId()));
     }
 
     @Test
